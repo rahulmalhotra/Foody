@@ -137,8 +137,7 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
     
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK);
         super.onBackPressed();
     }
 

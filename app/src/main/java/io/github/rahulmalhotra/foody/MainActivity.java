@@ -59,9 +59,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     final int PLACE_PICKER_REQUEST_CODE = 1;
     final int CUISINE_REQUEST_CODE = 2;
+    final int SETTINGS_REQUEST_CODE = 3;
 
     Double latitude, longitude;
-    String cuisineIds;
+    String cuisineIds, sortBy, radius, sortOrder;
     Boolean useCurrentLocation;
     SharedPreferences sharedPreferences;
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 break;
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 break;
             case R.id.cuisinePreference:
                 Intent intent1 = new Intent(this, CuisinePreference.class);
@@ -138,6 +139,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             } else if (requestCode == CUISINE_REQUEST_CODE) {
                 swipeRefreshLayout.setRefreshing(true);
                 getRestaurantList();
+            } else if (requestCode == SETTINGS_REQUEST_CODE) {
+                swipeRefreshLayout.setRefreshing(true);
+                getRestaurantList();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -158,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if(isNetworkAvailable()) {
             RestaurantAPIService restaurantAPIService = RetrofitClient.getClient(BASE_URL)
                                                         .create(RestaurantAPIService.class);
-            restaurantAPIService.getRestaurants(String.valueOf(latitude), String.valueOf(longitude), "100", cuisineIds)
+            restaurantAPIService.getRestaurants(String.valueOf(latitude), String.valueOf(longitude), radius, cuisineIds, sortBy, sortOrder)
                     .enqueue(new Callback<RestaurantSearch>() {
                         @Override
                         public void onResponse(Call<RestaurantSearch> call, Response<RestaurantSearch> response) {
@@ -201,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected void onResume() {
         super.onResume();
         cuisineIds = sharedPreferences.getString("cuisineIds", "none");
+        radius = sharedPreferences.getString("radius", "100");
+        sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
+        sortOrder = sharedPreferences.getString("sortOrder", getResources().getStringArray(R.array.sortOrderInputValues)[0]);
         if(useCurrentLocation) {
             getCurrentLocation();
         }
