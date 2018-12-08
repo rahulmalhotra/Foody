@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onResume() {
         super.onResume();
+/*
         cuisineIds = sharedPreferences.getString("cuisineIds", "none");
         radius = sharedPreferences.getString("radius", "100");
         sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if(useCurrentLocation) {
             getCurrentLocation();
         }
+*/
     }
 
     @Override

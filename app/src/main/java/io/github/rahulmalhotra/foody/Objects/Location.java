@@ -1,10 +1,13 @@
 
 package io.github.rahulmalhotra.foody.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Location {
+public class Location implements Parcelable {
 
     @SerializedName("address")
     @Expose
@@ -33,6 +36,38 @@ public class Location {
     @SerializedName("locality_verbose")
     @Expose
     private String localityVerbose;
+
+    protected Location(Parcel in) {
+        address = in.readString();
+        locality = in.readString();
+        city = in.readString();
+        if (in.readByte() == 0) {
+            cityId = null;
+        } else {
+            cityId = in.readInt();
+        }
+        latitude = in.readString();
+        longitude = in.readString();
+        zipcode = in.readString();
+        if (in.readByte() == 0) {
+            countryId = null;
+        } else {
+            countryId = in.readInt();
+        }
+        localityVerbose = in.readString();
+    }
+
+    public static final Creator<Location> CREATOR = new Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
 
     public String getAddress() {
         return address;
@@ -106,4 +141,31 @@ public class Location {
         this.localityVerbose = localityVerbose;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(address);
+        dest.writeString(locality);
+        dest.writeString(city);
+        if (cityId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(cityId);
+        }
+        dest.writeString(latitude);
+        dest.writeString(longitude);
+        dest.writeString(zipcode);
+        if (countryId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(countryId);
+        }
+        dest.writeString(localityVerbose);
+    }
 }

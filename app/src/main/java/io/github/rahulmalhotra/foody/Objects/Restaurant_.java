@@ -1,11 +1,14 @@
 
 package io.github.rahulmalhotra.foody.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Restaurant_ {
+public class Restaurant_ implements Parcelable {
 
     @SerializedName("R")
     @Expose
@@ -100,6 +103,88 @@ public class Restaurant_ {
     @SerializedName("establishment_types")
     @Expose
     private List<Object> establishmentTypes = null;
+
+    protected Restaurant_(Parcel in) {
+        apikey = in.readString();
+        id = in.readString();
+        name = in.readString();
+        url = in.readString();
+        if (in.readByte() == 0) {
+            switchToOrderMenu = null;
+        } else {
+            switchToOrderMenu = in.readInt();
+        }
+        cuisines = in.readString();
+        if (in.readByte() == 0) {
+            averageCostForTwo = null;
+        } else {
+            averageCostForTwo = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            priceRange = null;
+        } else {
+            priceRange = in.readInt();
+        }
+        currency = in.readString();
+        if (in.readByte() == 0) {
+            opentableSupport = null;
+        } else {
+            opentableSupport = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            isZomatoBookRes = null;
+        } else {
+            isZomatoBookRes = in.readInt();
+        }
+        mezzoProvider = in.readString();
+        if (in.readByte() == 0) {
+            isBookFormWebView = null;
+        } else {
+            isBookFormWebView = in.readInt();
+        }
+        bookFormWebViewUrl = in.readString();
+        bookAgainUrl = in.readString();
+        thumb = in.readString();
+        photosUrl = in.readString();
+        menuUrl = in.readString();
+        featuredImage = in.readString();
+        if (in.readByte() == 0) {
+            hasOnlineDelivery = null;
+        } else {
+            hasOnlineDelivery = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            isDeliveringNow = null;
+        } else {
+            isDeliveringNow = in.readInt();
+        }
+        byte tmpIncludeBogoOffers = in.readByte();
+        includeBogoOffers = tmpIncludeBogoOffers == 0 ? null : tmpIncludeBogoOffers == 1;
+        deeplink = in.readString();
+        if (in.readByte() == 0) {
+            isTableReservationSupported = null;
+        } else {
+            isTableReservationSupported = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            hasTableBooking = null;
+        } else {
+            hasTableBooking = in.readInt();
+        }
+        eventsUrl = in.readString();
+    }
+
+    public static final Creator<Restaurant_> CREATOR = new Creator<Restaurant_>() {
+        @Override
+        public Restaurant_ createFromParcel(Parcel in) {
+            return new Restaurant_(in);
+        }
+
+        @Override
+        public Restaurant_[] newArray(int size) {
+            return new Restaurant_[size];
+        }
+    };
 
     public R getR() {
         return r;
@@ -349,4 +434,88 @@ public class Restaurant_ {
         this.establishmentTypes = establishmentTypes;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(apikey);
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(url);
+        if (switchToOrderMenu == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(switchToOrderMenu);
+        }
+        dest.writeString(cuisines);
+        if (averageCostForTwo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(averageCostForTwo);
+        }
+        if (priceRange == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(priceRange);
+        }
+        dest.writeString(currency);
+        if (opentableSupport == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(opentableSupport);
+        }
+        if (isZomatoBookRes == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(isZomatoBookRes);
+        }
+        dest.writeString(mezzoProvider);
+        if (isBookFormWebView == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(isBookFormWebView);
+        }
+        dest.writeString(bookFormWebViewUrl);
+        dest.writeString(bookAgainUrl);
+        dest.writeString(thumb);
+        dest.writeString(photosUrl);
+        dest.writeString(menuUrl);
+        dest.writeString(featuredImage);
+        if (hasOnlineDelivery == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(hasOnlineDelivery);
+        }
+        if (isDeliveringNow == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(isDeliveringNow);
+        }
+        dest.writeByte((byte) (includeBogoOffers == null ? 0 : includeBogoOffers ? 1 : 2));
+        dest.writeString(deeplink);
+        if (isTableReservationSupported == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(isTableReservationSupported);
+        }
+        if (hasTableBooking == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(hasTableBooking);
+        }
+        dest.writeString(eventsUrl);
+    }
 }

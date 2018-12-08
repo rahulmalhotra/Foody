@@ -28,7 +28,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".CuisinePreference"></activity>
+        <activity android:name=".CuisinePreference" />
+        <activity android:name=".DetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

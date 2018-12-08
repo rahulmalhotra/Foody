@@ -1,6 +1,9 @@
 package io.github.rahulmalhotra.foody.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.rahulmalhotra.foody.DetailActivity;
 import io.github.rahulmalhotra.foody.Objects.Location;
 import io.github.rahulmalhotra.foody.Objects.Restaurant;
 import io.github.rahulmalhotra.foody.Objects.Restaurant_;
@@ -116,6 +120,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         @Override
         public void onClick(View v) {
 
+            Restaurant_ restaurant = restaurantList.get(getAdapterPosition()).getRestaurant();
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("restaurant", restaurant);
+            intent.putExtra("userRating", restaurant.getUserRating());
+            intent.putExtra("location", restaurant.getLocation());
+            context.startActivity(intent);
         }
     }
 }
