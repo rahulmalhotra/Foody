@@ -91,11 +91,13 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
                 <Button
+                    android:id="@+id/detailBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="Details" />
                 <Button
+                    android:id="@+id/directionBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"

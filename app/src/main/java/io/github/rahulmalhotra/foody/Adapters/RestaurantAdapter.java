@@ -28,12 +28,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     Context context;
     List<Restaurant> restaurantList;
-    String imagePlaceHolderURL;
 
     public RestaurantAdapter(Context context)
     {
         this.context = context;
-        imagePlaceHolderURL = "https://via.placeholder.com/200x200.png/D3D3D3/000000?text=No+Image";
     }
 
     public void setRestaurantList(List<Restaurant> restaurantList) {
@@ -53,35 +51,43 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         String address = "";
         Restaurant_ restaurant = restaurantList.get(viewHolder.getAdapterPosition()).getRestaurant();
         viewHolder.name.setText(restaurant.getName());
-        viewHolder.rating.setText("Rating: " + restaurant.getUserRating().getAggregateRating());
-        viewHolder.votes.setText(restaurant.getUserRating().getVotes() + " Votes");
+        if(restaurant.getUserRating()!=null) {
+            viewHolder.rating.setText("Rating: " + restaurant.getUserRating().getAggregateRating());
+            viewHolder.votes.setText(restaurant.getUserRating().getVotes() + " Votes");
+        } else if(restaurant.getIsBookmarked()) {
+            viewHolder.rating.setText(restaurant.getRestaurantRating());
+            viewHolder.votes.setText(restaurant.getRestaurantVotes());
+        }
         Location location = restaurant.getLocation();
-        if(!location.getAddress().isEmpty()) {
+        if(location!=null && !location.getAddress().isEmpty()) {
             address += restaurant.getLocation().getAddress();
         }
-        if(!location.getLocality().isEmpty()) {
+        if(location!=null && !location.getLocality().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  ", ";
             }
             address += restaurant.getLocation().getLocality();
         }
-        if(!location.getCity().isEmpty()) {
+        if(location!=null && !location.getCity().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  ", ";
             }
             address += restaurant.getLocation().getCity();
         }
-        if(!location.getZipcode().isEmpty()) {
+        if(location!=null && !location.getZipcode().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  " - ";
             }
             address += restaurant.getLocation().getZipcode();
         }
+        if(restaurant.getIsBookmarked()) {
+            address = restaurant.getRestaurantAddress();
+        }
         viewHolder.address.setText(address);
         if(!restaurant.getThumb().isEmpty()) {
             Picasso.get().load(restaurant.getThumb()).into(viewHolder.image);
         } else {
-            Picasso.get().load(imagePlaceHolderURL).into(viewHolder.image);
+            viewHolder.image.setImageResource(R.drawable.noimage);
         }
     }
 

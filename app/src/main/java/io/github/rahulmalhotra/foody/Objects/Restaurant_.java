@@ -1,21 +1,30 @@
 
 package io.github.rahulmalhotra.foody.Objects;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "restaurant")
 public class Restaurant_ implements Parcelable {
 
+    @Ignore
     @SerializedName("R")
     @Expose
     private R r;
+    @Ignore
     @SerializedName("apikey")
     @Expose
     private String apikey;
+    @PrimaryKey
+    @NonNull
     @SerializedName("id")
     @Expose
     private String id;
@@ -25,6 +34,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("url")
     @Expose
     private String url;
+    @Ignore
     @SerializedName("location")
     @Expose
     private Location location;
@@ -43,6 +53,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("currency")
     @Expose
     private String currency;
+    @Ignore
     @SerializedName("offers")
     @Expose
     private List<Object> offers = null;
@@ -67,6 +78,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("thumb")
     @Expose
     private String thumb;
+    @Ignore
     @SerializedName("user_rating")
     @Expose
     private UserRating userRating;
@@ -100,15 +112,88 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("events_url")
     @Expose
     private String eventsUrl;
+    @Ignore
     @SerializedName("establishment_types")
     @Expose
     private List<Object> establishmentTypes = null;
+
+    // Variables for DB
+    private boolean isBookmarked = false;
+    private String restaurantRating;
+    private String restaurantVotes;
+    private String restaurantAddress;
+    private String latLng;
+
+    public Restaurant_(
+            String id,
+            String name,
+            String url,
+            Integer switchToOrderMenu,
+            String cuisines,
+            Integer averageCostForTwo,
+            Integer priceRange,
+            String currency,
+            Integer opentableSupport,
+            Integer isZomatoBookRes,
+            String mezzoProvider,
+            Integer isBookFormWebView,
+            String bookFormWebViewUrl,
+            String bookAgainUrl,
+            String thumb,
+            String photosUrl,
+            String menuUrl,
+            String featuredImage,
+            Integer hasOnlineDelivery,
+            Integer isDeliveringNow,
+            Boolean includeBogoOffers,
+            String deeplink,
+            Integer isTableReservationSupported,
+            Integer hasTableBooking,
+            String eventsUrl,
+            Boolean isBookmarked,
+            String restaurantRating,
+            String restaurantVotes,
+            String restaurantAddress,
+            String latLng
+    ) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.switchToOrderMenu = switchToOrderMenu;
+        this.cuisines = cuisines;
+        this.averageCostForTwo = averageCostForTwo;
+        this.priceRange = priceRange;
+        this.currency = currency;
+        this.opentableSupport = opentableSupport;
+        this.isZomatoBookRes = isZomatoBookRes;
+        this.mezzoProvider = mezzoProvider;
+        this.isBookFormWebView = isBookFormWebView;
+        this.bookFormWebViewUrl = bookFormWebViewUrl;
+        this.bookAgainUrl = bookAgainUrl;
+        this.thumb = thumb;
+        this.photosUrl = photosUrl;
+        this.menuUrl = menuUrl;
+        this.featuredImage = featuredImage;
+        this.hasOnlineDelivery = hasOnlineDelivery;
+        this.isDeliveringNow = isDeliveringNow;
+        this.includeBogoOffers = includeBogoOffers;
+        this.deeplink = deeplink;
+        this.isTableReservationSupported = isTableReservationSupported;
+        this.hasTableBooking = hasTableBooking;
+        this.eventsUrl = eventsUrl;
+        this.isBookmarked = isBookmarked;
+        this.restaurantRating = restaurantRating;
+        this.restaurantVotes = restaurantVotes;
+        this.restaurantAddress = restaurantAddress;
+        this.latLng = latLng;
+    }
 
     protected Restaurant_(Parcel in) {
         apikey = in.readString();
         id = in.readString();
         name = in.readString();
         url = in.readString();
+        location = in.readParcelable(Location.class.getClassLoader());
         if (in.readByte() == 0) {
             switchToOrderMenu = null;
         } else {
@@ -145,6 +230,7 @@ public class Restaurant_ implements Parcelable {
         bookFormWebViewUrl = in.readString();
         bookAgainUrl = in.readString();
         thumb = in.readString();
+        userRating = in.readParcelable(UserRating.class.getClassLoader());
         photosUrl = in.readString();
         menuUrl = in.readString();
         featuredImage = in.readString();
@@ -172,6 +258,11 @@ public class Restaurant_ implements Parcelable {
             hasTableBooking = in.readInt();
         }
         eventsUrl = in.readString();
+        isBookmarked = in.readByte() != 0;
+        restaurantRating = in.readString();
+        restaurantVotes = in.readString();
+        restaurantAddress = in.readString();
+        latLng = in.readString();
     }
 
     public static final Creator<Restaurant_> CREATOR = new Creator<Restaurant_>() {
@@ -434,6 +525,12 @@ public class Restaurant_ implements Parcelable {
         this.establishmentTypes = establishmentTypes;
     }
 
+    public Boolean getIsBookmarked() { return isBookmarked; }
+
+    public void setIsBookmarked(Boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -441,10 +538,12 @@ public class Restaurant_ implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeString(apikey);
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(url);
+        dest.writeParcelable(location, flags);
         if (switchToOrderMenu == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -487,6 +586,7 @@ public class Restaurant_ implements Parcelable {
         dest.writeString(bookFormWebViewUrl);
         dest.writeString(bookAgainUrl);
         dest.writeString(thumb);
+        dest.writeParcelable(userRating, flags);
         dest.writeString(photosUrl);
         dest.writeString(menuUrl);
         dest.writeString(featuredImage);
@@ -517,5 +617,42 @@ public class Restaurant_ implements Parcelable {
             dest.writeInt(hasTableBooking);
         }
         dest.writeString(eventsUrl);
+        dest.writeByte((byte) (isBookmarked ? 1 : 0));
+        dest.writeString(restaurantRating);
+        dest.writeString(restaurantVotes);
+        dest.writeString(restaurantAddress);
+        dest.writeString(latLng);
+    }
+
+    public String getRestaurantRating() {
+        return restaurantRating;
+    }
+
+    public void setRestaurantRating(String restaurantRating) {
+        this.restaurantRating = restaurantRating;
+    }
+
+    public String getRestaurantVotes() {
+        return restaurantVotes;
+    }
+
+    public void setRestaurantVotes(String restaurantVotes) {
+        this.restaurantVotes = restaurantVotes;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
+    }
+
+    public String getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(String latLng) {
+        this.latLng = latLng;
     }
 }
