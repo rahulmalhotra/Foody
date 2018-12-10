@@ -20,6 +20,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +50,7 @@ import io.github.rahulmalhotra.foody.Objects.RestaurantSearch;
 import io.github.rahulmalhotra.foody.Objects.Restaurant_;
 import io.github.rahulmalhotra.foody.Utils.RestaurantViewModel;
 import io.github.rahulmalhotra.foody.Utils.RestaurantsViewModel;
+import io.github.rahulmalhotra.foody.Widget.FavoriteRestaurantsWidgetService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -149,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         tabAdapter.addFragment(mainActivityFragment2);
         // Setting up view pager and tab layout
         viewPager.setAdapter(tabAdapter);
+        if((getIntent()!=null) && (getIntent().getIntExtra("activeTab", 0) == 1))
+            viewPager.setCurrentItem(1);
         tabLayout.setupWithViewPager(viewPager);
         if(savedInstanceState!=null) {
             mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
@@ -298,12 +305,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onChanged(@Nullable List<Restaurant_> bookmarkedRestaurants) {
                 bookmarkedRestaurantList = new ArrayList<>(bookmarkedRestaurants);
                 ArrayList<Restaurant> restaurantArrayList = new ArrayList<>();
+//                String[] restaurantNames = new String[bookmarkedRestaurants.size()];
+                String restaurantNames = "";
+                int i=0;
                 for(Restaurant_ restaurant_: bookmarkedRestaurants) {
                     Restaurant restaurant = new Restaurant();
                     restaurant.setRestaurant(restaurant_);
                     restaurantArrayList.add(restaurant);
+                    restaurantNames += restaurant_.getName() + "\n";
                 }
                 mainActivityFragment2.setRestaurantArrayList(restaurantArrayList);
+                FavoriteRestaurantsWidgetService.startActionUpdateFavoriteRestaurants(getApplicationContext(), restaurantNames);
             }
         });
     }
