@@ -27,12 +27,17 @@ public class MainActivityFragment extends Fragment {
 
     RestaurantAdapter restaurantAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        restaurantAdapter = new RestaurantAdapter(this.getContext());
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        restaurantAdapter = new RestaurantAdapter(this.getContext());
         restaurantsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         restaurantsList.setHasFixedSize(true);
         restaurantsList.setAdapter(restaurantAdapter);

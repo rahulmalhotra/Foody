@@ -133,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             useCurrentLocation = savedInstanceState.getBoolean("useCurrentLocation");
             latitude = savedInstanceState.getDouble("latitude");
             longitude = savedInstanceState.getDouble("longitude");
-            bookmarkedRestaurantList = savedInstanceState.getParcelableArrayList("bookmarkedRestaurantList");
+//            bookmarkedRestaurantList = savedInstanceState.getParcelableArrayList("bookmarkedRestaurantList");
             restaurantArrayList = savedInstanceState.getParcelableArrayList("restaurantArrayList");
-            mainActivityFragment1 = new MainActivityFragment();
-            mainActivityFragment2 = new MainActivityFragment();
+            mainActivityFragment1 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragment1");
+            mainActivityFragment2 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragment2");
         } else {
             mainActivityFragment1 = new MainActivityFragment();
             mainActivityFragment2 = new MainActivityFragment();
@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         // Setting up view pager and tab layout
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        if(savedInstanceState!=null) {
+            mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
+        }
         initializeViewModel();
     }
 
@@ -307,11 +310,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putDouble("latitude", latitude);
-        outState.putDouble("longitude", longitude);
+        if(latitude!=null)
+            outState.putDouble("latitude", latitude);
+        if(longitude!=null)
+            outState.putDouble("longitude", longitude);
         outState.putBoolean("useCurrentLocation", useCurrentLocation);
-        outState.putParcelableArrayList("bookmarkedRestaurantList", bookmarkedRestaurantList);
+//        outState.putParcelableArrayList("bookmarkedRestaurantList", bookmarkedRestaurantList);
         outState.putParcelableArrayList("restaurantArrayList", restaurantArrayList);
+        getSupportFragmentManager().putFragment(outState, "fragment1", mainActivityFragment1);
+        getSupportFragmentManager().putFragment(outState, "fragment2", mainActivityFragment2);
         super.onSaveInstanceState(outState);
     }
 }
