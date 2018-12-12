@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.rahulmalhotra.foody.DetailActivity;
+import io.github.rahulmalhotra.foody.Fragments.RestaurantDetailFragment;
 import io.github.rahulmalhotra.foody.Objects.Location;
 import io.github.rahulmalhotra.foody.Objects.Restaurant;
 import io.github.rahulmalhotra.foody.Objects.Restaurant_;
@@ -28,6 +30,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     Context context;
     List<Restaurant> restaurantList;
+    private boolean isTablet;
 
     public RestaurantAdapter(Context context)
     {
@@ -126,12 +129,23 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         @Override
         public void onClick(View v) {
 
+            Bundle arguments = new Bundle();
+            isTablet = context.getResources().getBoolean(R.bool.isTablet);
+
             Restaurant_ restaurant = restaurantList.get(getAdapterPosition()).getRestaurant();
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("restaurant", restaurant);
-            intent.putExtra("userRating", restaurant.getUserRating());
-            intent.putExtra("location", restaurant.getLocation());
-            context.startActivity(intent);
+            arguments.putParcelable("restaurant", restaurant);
+            arguments.putParcelable("userRating", restaurant.getUserRating());
+            arguments.putParcelable("location", restaurant.getLocation());
+
+            if(isTablet) {
+                RestaurantDetailFragment fragment = new RestaurantDetailFragment();
+                fragment.setArguments(arguments);
+                ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.restaurantDetailContainer, fragment).commit();
+            } else {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtras(arguments);
+                context.startActivity(intent);
+            }
         }
     }
 }
