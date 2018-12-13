@@ -12,4 +12,5 @@
     <string name="restaurantImage">Restaurant Image</string>
     <string name="restaurantDetails">Details</string>
     <string name="restaurantDirections">Directions</string>
+    <string name="admobId">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

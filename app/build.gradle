@@ -19,6 +19,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
         resValue("string", "GOOGLE_API_KEY", GOOGLE_API_KEY)
+        resValue("string", "ADMOB_KEY", ADMOB_KEY)
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -61,6 +62,9 @@ dependencies {
 
     // Google places api
     implementation 'com.google.android.gms:play-services-places:16.0.0'
+
+    // Mobile Ads SDK
+    implementation 'com.google.firebase:firebase-ads:17.1.2'
 
     // Room and Lifecycle
     implementation "android.arch.persistence.room:runtime:1.1.1"

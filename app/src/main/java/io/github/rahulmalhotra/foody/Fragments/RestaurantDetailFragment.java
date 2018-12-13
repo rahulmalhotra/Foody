@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -65,6 +69,9 @@ public class RestaurantDetailFragment extends Fragment {
     @BindView(R.id.directionBtn)
     Button directionBtn;
 
+    @BindView(R.id.adView)
+    AdView mAdView;
+
     String featuredImageURL;
     String dLatLng;
     private boolean restaurantBookmarked;
@@ -81,6 +88,7 @@ public class RestaurantDetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.context = getActivity();
         setHasOptionsMenu(true);
+        MobileAds.initialize(context, getResources().getString(R.string.admobId));
         super.onCreate(savedInstanceState);
     }
 
@@ -146,6 +154,11 @@ public class RestaurantDetailFragment extends Fragment {
         }
 
         ButterKnife.bind(this, view);
+
+        // Loading Ads
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         restaurantBookmarked = false;
 
         if(getArguments()!=null) {
