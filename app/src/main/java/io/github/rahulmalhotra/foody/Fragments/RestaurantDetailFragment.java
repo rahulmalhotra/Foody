@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,10 +75,12 @@ public class RestaurantDetailFragment extends Fragment {
     private Location location;
     private Context context;
     private boolean isTablet;
+    private Menu menu;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.context = getActivity();
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -101,6 +102,7 @@ public class RestaurantDetailFragment extends Fragment {
         RestaurantExecutors.getRestaurantExecutorsInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
+                restaurant.setIsBookmarked(false);
                 restaurantDatabaseInstance.restaurantDao().deleteFavoriteRestaurant(restaurant);
             }
         });
@@ -112,10 +114,8 @@ public class RestaurantDetailFragment extends Fragment {
             case R.id.bookmark:
                 if(!restaurantBookmarked) {
                     insertRestaurant();
-                    item.setIcon(R.drawable.bookmark);
                 } else {
                     deleteRestaurant();
-                    item.setIcon(R.drawable.bookmarkempty);
                 }
                 return true;
             default:
@@ -125,8 +125,9 @@ public class RestaurantDetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
         inflater.inflate(R.menu.detail, menu);
-        if(restaurant!= null && restaurant.getIsBookmarked()) {
+        if(restaurantBookmarked) {
             menu.findItem(R.id.bookmark).setIcon(R.drawable.bookmark);
         }
         super.onCreateOptionsMenu(menu, inflater);
@@ -135,7 +136,6 @@ public class RestaurantDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view;
         isTablet = context.getResources().getBoolean(R.bool.isTablet);
         if(isTablet) {
@@ -148,14 +148,16 @@ public class RestaurantDetailFragment extends Fragment {
         ButterKnife.bind(this, view);
         restaurantBookmarked = false;
 
-        if(getArguments().containsKey("restaurant")) {
-            restaurant = getArguments().getParcelable("restaurant");
-        }
-        if(getArguments().containsKey("userRating")) {
-            userRating = getArguments().getParcelable("userRating");
-        }
-        if(getArguments().containsKey("location")) {
-            location = getArguments().getParcelable("location");
+        if(getArguments()!=null) {
+            if(getArguments().containsKey("restaurant")) {
+                restaurant = getArguments().getParcelable("restaurant");
+            }
+            if(getArguments().containsKey("userRating")) {
+                userRating = getArguments().getParcelable("userRating");
+            }
+            if(getArguments().containsKey("location")) {
+                location = getArguments().getParcelable("location");
+            }
         }
         if(restaurant!=null) {
             if(toolbar!=null)
@@ -168,8 +170,10 @@ public class RestaurantDetailFragment extends Fragment {
         if(isTablet) {
             ((TextView) view.findViewById(R.id.restaurantName)).setText(restaurant.getName());
         } else {
-            ((AppCompatActivity) context).setSupportActionBar(toolbar);
-            ((AppCompatActivity) context).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if(((AppCompatActivity)context).getSupportActionBar()==null) {
+                ((AppCompatActivity) context).setSupportActionBar(toolbar);
+                ((AppCompatActivity) context).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         if(featuredImageURL.isEmpty()) {
@@ -214,12 +218,6 @@ public class RestaurantDetailFragment extends Fragment {
         if(userRating!=null) {
             rating.setText("User Rating: " + userRating.getAggregateRating());
             votes.setText("Votes: " + userRating.getVotes());
-        }
-        if(restaurant!=null && restaurant.getIsBookmarked()) {
-            restaurantBookmarked = true;
-            rating.setText(restaurant.getRestaurantRating());
-            votes.setText(restaurant.getRestaurantVotes());
-            dLatLng = restaurant.getLatLng();
         }
         restaurantDatabaseInstance = RestaurantDatabase.getInstance(context);
         if(restaurant!=null)
@@ -266,9 +264,17 @@ public class RestaurantDetailFragment extends Fragment {
             public void onChanged(@Nullable Restaurant_ bookmarkedRestaurant) {
                 if(bookmarkedRestaurant!=null) {
                     restaurant = bookmarkedRestaurant;
+                    rating.setText(restaurant.getRestaurantRating());
+                    votes.setText(restaurant.getRestaurantVotes());
+                    address.setText(restaurant.getRestaurantAddress());
+                    dLatLng = restaurant.getLatLng();
                     restaurantBookmarked = true;
+                    if(menu!=null)
+                        menu.findItem(R.id.bookmark).setIcon(R.drawable.bookmark);
                 } else {
                     restaurantBookmarked = false;
+                    if(menu!=null)
+                        menu.findItem(R.id.bookmark).setIcon(R.drawable.bookmarkempty);
                 }
             }
         });

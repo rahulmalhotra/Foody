@@ -1,14 +1,12 @@
 package io.github.rahulmalhotra.foody;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -86,7 +83,7 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
         cuisineListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         cuisineListView.setAdapter(adapter);
         for(int i=0; i<cuisineListView.getCount(); i++) {
-            if(selectedCuisineIds.contains(String.valueOf(cuisineMap.get(i).getCuisineId()))) {
+            if(cuisineMap.get(i)!=null && selectedCuisineIds.contains(String.valueOf(cuisineMap.get(i).getCuisineId()))) {
                 cuisineListView.setItemChecked(i, true);
             }
         }
@@ -105,7 +102,8 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
                         @Override
                         public void onResponse(Call<CuisineSearch> call, Response<CuisineSearch> response) {
                             cuisineRefreshLayout.setRefreshing(false);
-                            setCuisineListView(response.body().getCuisines());
+                            if(response.body()!=null)
+                                setCuisineListView(response.body().getCuisines());
                         }
 
                         @Override
@@ -150,12 +148,13 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
         for(int i=0; i<cuisineListView.getCount(); i++) {
             if(sparseBooleanArray.get(i)) {
                 Cuisine_ cuisine_ = cuisineMap.get(i);
-                cuisineIds = cuisineIds.concat(String.valueOf(cuisine_.getCuisineId()).concat(","));
+                if(cuisine_!=null)
+                    cuisineIds = cuisineIds.concat(String.valueOf(cuisine_.getCuisineId()).concat(","));
             }
         }
 
         editor.putString("cuisineIds", cuisineIds);
-        editor.commit();
+        editor.apply();
 
         Toast.makeText(this, "Cuisine Preference Applied", Toast.LENGTH_SHORT).show();
         onBackPressed();

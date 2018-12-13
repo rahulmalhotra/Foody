@@ -6,10 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.text.SpannableStringBuilder;
-
-import io.github.rahulmalhotra.foody.DetailActivity;
-import io.github.rahulmalhotra.foody.MainActivity;
 
 public class FavoriteRestaurantsWidgetService extends IntentService {
 

@@ -30,6 +30,7 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".CuisinePreference" />
         <activity android:name=".DetailActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:parentActivityName=".MainActivity">
         </activity>

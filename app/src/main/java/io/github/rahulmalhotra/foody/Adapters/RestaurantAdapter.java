@@ -3,7 +3,6 @@ package io.github.rahulmalhotra.foody.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -54,39 +53,37 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         String address = "";
         Restaurant_ restaurant = restaurantList.get(viewHolder.getAdapterPosition()).getRestaurant();
         viewHolder.name.setText(restaurant.getName());
-        if(restaurant.getUserRating()!=null) {
-            viewHolder.rating.setText("Rating: " + restaurant.getUserRating().getAggregateRating());
-            viewHolder.votes.setText(restaurant.getUserRating().getVotes() + " Votes");
-        } else if(restaurant.getIsBookmarked()) {
-            viewHolder.rating.setText(restaurant.getRestaurantRating());
-            viewHolder.votes.setText(restaurant.getRestaurantVotes());
-        }
         Location location = restaurant.getLocation();
         if(location!=null && !location.getAddress().isEmpty()) {
-            address += restaurant.getLocation().getAddress();
+            address += location.getAddress();
         }
         if(location!=null && !location.getLocality().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  ", ";
             }
-            address += restaurant.getLocation().getLocality();
+            address += location.getLocality();
         }
         if(location!=null && !location.getCity().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  ", ";
             }
-            address += restaurant.getLocation().getCity();
+            address += location.getCity();
         }
         if(location!=null && !location.getZipcode().isEmpty()) {
             if(!address.isEmpty()) {
                 address +=  " - ";
             }
-            address += restaurant.getLocation().getZipcode();
+            address += location.getZipcode();
         }
-        if(restaurant.getIsBookmarked()) {
-            address = restaurant.getRestaurantAddress();
+        if(restaurant.getUserRating()!=null) {
+            viewHolder.rating.setText("Rating: " + restaurant.getUserRating().getAggregateRating());
+            viewHolder.votes.setText(restaurant.getUserRating().getVotes() + " Votes");
+            viewHolder.address.setText(address);
+        } else if(restaurant.getIsBookmarked()) {
+            viewHolder.rating.setText(restaurant.getRestaurantRating());
+            viewHolder.votes.setText(restaurant.getRestaurantVotes());
+            viewHolder.address.setText(restaurant.getRestaurantAddress());
         }
-        viewHolder.address.setText(address);
         if(!restaurant.getThumb().isEmpty()) {
             Picasso.get().load(restaurant.getThumb()).into(viewHolder.image);
         } else {

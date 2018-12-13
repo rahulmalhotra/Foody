@@ -20,10 +20,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,7 +44,6 @@ import io.github.rahulmalhotra.foody.Fragments.MainActivityFragment;
 import io.github.rahulmalhotra.foody.Objects.Restaurant;
 import io.github.rahulmalhotra.foody.Objects.RestaurantSearch;
 import io.github.rahulmalhotra.foody.Objects.Restaurant_;
-import io.github.rahulmalhotra.foody.Utils.RestaurantViewModel;
 import io.github.rahulmalhotra.foody.Utils.RestaurantsViewModel;
 import io.github.rahulmalhotra.foody.Widget.FavoriteRestaurantsWidgetService;
 import retrofit2.Call;
@@ -158,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             viewPager.setCurrentItem(1);
         tabLayout.setupWithViewPager(viewPager);
         if(savedInstanceState!=null) {
+            Log.d("saved", "frag1");
             mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
         }
         initializeViewModel();
@@ -244,15 +240,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onResume() {
         super.onResume();
-/*
         cuisineIds = sharedPreferences.getString("cuisineIds", "none");
         radius = sharedPreferences.getString("radius", "100");
         sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
         sortOrder = sharedPreferences.getString("sortOrder", getResources().getStringArray(R.array.sortOrderInputValues)[0]);
-        if(useCurrentLocation) {
-            getCurrentLocation();
-        }
-*/
     }
 
     @Override

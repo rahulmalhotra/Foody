@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,52 +10,44 @@
         <ImageView
             android:id="@+id/restaurantImage"
             android:layout_width="match_parent"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/restaurantImage"
             android:layout_height="150dp" />
         <TextView
             android:id="@+id/restaurantName"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/sheet_text_scrim_height_bottom"
-            android:layout_gravity="bottom"
-            android:textColor="@android:color/white"
-            android:textSize="30dp"
-            android:textAlignment="center"
-            android:paddingTop="20dp"
-            android:layout_alignBottom="@+id/restaurantImage"
-            android:background="@drawable/scrim_bottom" />
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="25sp"
+            android:textAlignment="center" />
         <TextView
             android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="@android:color/black"
-            android:text="Restaurant Address" />
+            android:textColor="@android:color/black" />
         <TextView
             android:id="@+id/cuisines"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Cuisines"/>
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/averageCost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Average Cost for two"/>
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/rating1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
-            android:text="Aggregate Rating"/>
+            android:textColor="@color/colorAccent" />
         <TextView
             android:id="@+id/votes1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="@android:color/holo_blue_dark"
-            android:text="Number of Votes"/>
+            android:textColor="@android:color/holo_blue_dark" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,13 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="Details" />
+                android:text="@string/restaurantDetails" />
             <Button
                 android:id="@+id/directionBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="Directions" />
+                android:text="@string/restaurantDirections" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

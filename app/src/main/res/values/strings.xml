@@ -9,4 +9,7 @@
         <item>asc</item>
         <item>desc</item>
     </string-array>
+    <string name="restaurantImage">Restaurant Image</string>
+    <string name="restaurantDetails">Details</string>
+    <string name="restaurantDirections">Directions</string>
 </resources>
