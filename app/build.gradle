@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+    signingConfigs {
+        release {
+            keyAlias 'mykey'
+            keyPassword 'rahul123'
+            storeFile file('E:\\My Projects\\Android Keystore\\foody.jks')
+            storePassword 'rahul123'
+        }
+    }
     defaultConfig {
         applicationId "io.github.rahulmalhotra.foody"
         minSdkVersion 15
@@ -17,6 +25,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {

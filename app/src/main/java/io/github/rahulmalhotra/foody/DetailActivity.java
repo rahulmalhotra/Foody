@@ -2,7 +2,6 @@ package io.github.rahulmalhotra.foody;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import butterknife.ButterKnife;
 import io.github.rahulmalhotra.foody.Fragments.RestaurantDetailFragment;
@@ -23,7 +22,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         isTablet = this.getResources().getBoolean(R.bool.isTablet);
-        Log.d("changed", String.valueOf(isTablet));
         if(isTablet) {
             finish();
         }
