@@ -6,7 +6,7 @@ android {
         release {
             keyAlias 'mykey'
             keyPassword 'rahul123'
-            storeFile file('E:\\My Projects\\Android Keystore\\foody.jks')
+            storeFile file('foody.jks')
             storePassword 'rahul123'
         }
     }

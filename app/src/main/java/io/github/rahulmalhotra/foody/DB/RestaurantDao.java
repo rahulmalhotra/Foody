@@ -16,6 +16,9 @@ public interface RestaurantDao {
     @Query("SELECT * FROM restaurant")
     LiveData<List<Restaurant_>> loadFavoriteRestaurants();
 
+    @Query("SELECT * FROM restaurant")
+    List<Restaurant_> loadFavoriteRestaurantsForWidget();
+
     @Insert
     void insertFavoriteRestaurant(Restaurant_ restaurant);
 

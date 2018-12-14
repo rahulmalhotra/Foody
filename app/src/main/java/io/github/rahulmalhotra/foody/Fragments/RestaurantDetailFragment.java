@@ -162,22 +162,22 @@ public class RestaurantDetailFragment extends Fragment {
         restaurantBookmarked = false;
 
         if(getArguments()!=null) {
-            if(getArguments().containsKey("restaurant")) {
-                restaurant = getArguments().getParcelable("restaurant");
+            if(getArguments().containsKey(context.getResources().getString(R.string.parcelableRestaurant))) {
+                restaurant = getArguments().getParcelable(context.getResources().getString(R.string.parcelableRestaurant));
             }
-            if(getArguments().containsKey("userRating")) {
-                userRating = getArguments().getParcelable("userRating");
+            if(getArguments().containsKey(context.getResources().getString(R.string.parcelableUserRating))) {
+                userRating = getArguments().getParcelable(context.getResources().getString(R.string.parcelableUserRating));
             }
-            if(getArguments().containsKey("location")) {
-                location = getArguments().getParcelable("location");
+            if(getArguments().containsKey(context.getResources().getString(R.string.parcelableLocation))) {
+                location = getArguments().getParcelable(context.getResources().getString(R.string.parcelableLocation));
             }
         }
         if(restaurant!=null) {
             if(toolbar!=null)
                 toolbar.setTitle(restaurant.getName());
             featuredImageURL = restaurant.getFeaturedImage();
-            cuisines.setText("Cuisines: " + restaurant.getCuisines());
-            averageCost.setText("Average Cost for two: " + restaurant.getAverageCostForTwo());
+            cuisines.setText(context.getResources().getString(R.string.cuisinesLabel) + restaurant.getCuisines());
+            averageCost.setText(context.getResources().getString(R.string.averageCostForTwoLabel) + restaurant.getAverageCostForTwo());
         }
 
         if(isTablet) {
@@ -207,30 +207,30 @@ public class RestaurantDetailFragment extends Fragment {
             }
             if(!location.getLocality().isEmpty()) {
                 if(!addressString.isEmpty()) {
-                    addressString +=  ", ";
+                    addressString += context.getResources().getString(R.string.comma);
                 }
                 addressString += location.getLocality();
             }
             if(!location.getCity().isEmpty()) {
                 if(!addressString.isEmpty()) {
-                    addressString +=  ", ";
+                    addressString += context.getResources().getString(R.string.comma);
                 }
                 addressString += location.getCity();
             }
             if(!location.getZipcode().isEmpty()) {
                 if(!addressString.isEmpty()) {
-                    addressString +=  " - ";
+                    addressString += context.getResources().getString(R.string.hyphen);
                 }
                 addressString += location.getZipcode();
             }
             if(!location.getLatitude().isEmpty() && !location.getLongitude().isEmpty()) {
-                dLatLng = location.getLatitude() + "," + location.getLongitude();
+                dLatLng = location.getLatitude() + context.getResources().getString(R.string.comma1) + location.getLongitude();
             }
         }
         address.setText(addressString);
         if(userRating!=null) {
-            rating.setText("User Rating: " + userRating.getAggregateRating());
-            votes.setText("Votes: " + userRating.getVotes());
+            rating.setText(context.getResources().getString(R.string.userRatingLabel) + userRating.getAggregateRating());
+            votes.setText(context.getResources().getString(R.string.votesLabel1) + userRating.getVotes());
         }
         restaurantDatabaseInstance = RestaurantDatabase.getInstance(context);
         if(restaurant!=null)
@@ -256,7 +256,7 @@ public class RestaurantDetailFragment extends Fragment {
     private void openRestaurantDetails() {
         String url = restaurant.getUrl();
         if(url.isEmpty()) {
-            Toast.makeText(context, "No more details found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getString(R.string.noMoreDetailsToast), Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -265,7 +265,7 @@ public class RestaurantDetailFragment extends Fragment {
     }
 
     private void openGoogleMaps() {
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + dLatLng));
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(context.getResources().getString(R.string.googleMapsIntentURL) + dLatLng));
         startActivity(intent);
     }
 

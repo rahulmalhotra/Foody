@@ -48,8 +48,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/favorite_restaurants_provider" />
         </receiver>
-
-        <service android:name=".Widget.FavoriteRestaurantsWidgetService" />
+        <service android:name=".Widget.FavoriteRestaurantsWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

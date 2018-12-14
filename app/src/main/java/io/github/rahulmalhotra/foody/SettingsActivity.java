@@ -34,10 +34,10 @@ public class SettingsActivity extends AppCompatActivity implements Button.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
-        sharedPreferences = getSharedPreferences("foody", Context.MODE_PRIVATE);
-        radius = sharedPreferences.getString("radius", "100");
-        sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
-        sortOrder = sharedPreferences.getString("sortOrder", getResources().getStringArray(R.array.sortOrderInputValues)[0]);
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
+        radius = sharedPreferences.getString(getResources().getString(R.string.spRadius), getResources().getString(R.string.spRadiusDefaultValue));
+        sortBy = sharedPreferences.getString(getResources().getString(R.string.spSortBy), getResources().getStringArray(R.array.sortByInputValues)[0]);
+        sortOrder = sharedPreferences.getString(getResources().getString(R.string.spSortOrder), getResources().getStringArray(R.array.sortOrderInputValues)[0]);
         radiusInput.setText(radius);
         for(int i=0; i<sortByInput.getCount(); i++) {
             if(sortByInput.getItemAtPosition(i).equals(sortBy)) {
@@ -64,9 +64,9 @@ public class SettingsActivity extends AppCompatActivity implements Button.OnClic
         sortBy = sortByInput.getSelectedItem().toString();
         sortOrder = sortOrderInput.getSelectedItem().toString();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("radius", radius);
-        editor.putString("sortBy", sortBy);
-        editor.putString("sortOrder", sortOrder);
+        editor.putString(getResources().getString(R.string.spRadius), radius);
+        editor.putString(getResources().getString(R.string.spSortBy), sortBy);
+        editor.putString(getResources().getString(R.string.spSortOrder), sortOrder);
         editor.apply();
         onBackPressed();
     }

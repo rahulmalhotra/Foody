@@ -20,7 +20,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,7 +44,7 @@ import io.github.rahulmalhotra.foody.Objects.Restaurant;
 import io.github.rahulmalhotra.foody.Objects.RestaurantSearch;
 import io.github.rahulmalhotra.foody.Objects.Restaurant_;
 import io.github.rahulmalhotra.foody.Utils.RestaurantsViewModel;
-import io.github.rahulmalhotra.foody.Widget.FavoriteRestaurantsWidgetService;
+import io.github.rahulmalhotra.foody.Widget.FavoriteRestaurantsProvider;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     useCurrentLocation = true;
                     onRefresh();
                 } else {
-                    Toast.makeText(this, "Already using current location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.alreadyUsingCurrentLocationToast), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.settings:
@@ -105,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 break;
             case R.id.cuisinePreference:
                 Intent intent1 = new Intent(this, CuisinePreference.class);
-                intent1.putExtra("latitude", String.valueOf(latitude));
-                intent1.putExtra("longitude", String.valueOf(longitude));
+                intent1.putExtra(getResources().getString(R.string.latitudeIntent), String.valueOf(latitude));
+                intent1.putExtra(getResources().getString(R.string.longitudeIntent), String.valueOf(longitude));
                 startActivityForResult(intent1, CUISINE_REQUEST_CODE);
                 break;
         }
@@ -123,20 +122,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         // Setting up location manager
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         swipeRefreshLayout.setOnRefreshListener(this);
-        sharedPreferences = getSharedPreferences("foody", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
 
-        cuisineIds = sharedPreferences.getString("cuisineIds", "none");
-        radius = sharedPreferences.getString("radius", "100");
-        sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
-        sortOrder = sharedPreferences.getString("sortOrder", getResources().getStringArray(R.array.sortOrderInputValues)[0]);
+        cuisineIds = sharedPreferences.getString(getResources().getString(R.string.spCuisineIds), getResources().getString(R.string.none));
+        radius = sharedPreferences.getString(getResources().getString(R.string.spRadius), getResources().getString(R.string.spRadiusDefaultValue));
+        sortBy = sharedPreferences.getString(getResources().getString(R.string.spSortBy), getResources().getStringArray(R.array.sortByInputValues)[0]);
+        sortOrder = sharedPreferences.getString(getResources().getString(R.string.spSortOrder), getResources().getStringArray(R.array.sortOrderInputValues)[0]);
         if(savedInstanceState!=null) {
-            useCurrentLocation = savedInstanceState.getBoolean("useCurrentLocation");
-            latitude = savedInstanceState.getDouble("latitude");
-            longitude = savedInstanceState.getDouble("longitude");
+            useCurrentLocation = savedInstanceState.getBoolean(getResources().getString(R.string.sisUseCurrentLocation));
+            latitude = savedInstanceState.getDouble(getResources().getString(R.string.latitudeIntent));
+            longitude = savedInstanceState.getDouble(getResources().getString(R.string.longitudeIntent));
 //            bookmarkedRestaurantList = savedInstanceState.getParcelableArrayList("bookmarkedRestaurantList");
-            restaurantArrayList = savedInstanceState.getParcelableArrayList("restaurantArrayList");
-            mainActivityFragment1 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragment1");
-            mainActivityFragment2 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragment2");
+            restaurantArrayList = savedInstanceState.getParcelableArrayList(getResources().getString(R.string.parcelableRestaurantArrayList));
+            mainActivityFragment1 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, getResources().getString(R.string.fragment1Name));
+            mainActivityFragment2 = (MainActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, getResources().getString(R.string.fragment2Name));
         } else {
             mainActivityFragment1 = new MainActivityFragment();
             mainActivityFragment2 = new MainActivityFragment();
@@ -144,16 +143,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 getCurrentLocation();
             }
         }
-        TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
+        TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), this);
         tabAdapter.addFragment(mainActivityFragment1);
         tabAdapter.addFragment(mainActivityFragment2);
         // Setting up view pager and tab layout
         viewPager.setAdapter(tabAdapter);
-        if((getIntent()!=null) && (getIntent().getIntExtra("activeTab", 0) == 1))
+        if((getIntent()!=null) && (getIntent().getIntExtra(getResources().getString(R.string.activeTabIntent), 0) == 1))
             viewPager.setCurrentItem(1);
         tabLayout.setupWithViewPager(viewPager);
         if(savedInstanceState!=null) {
-            Log.d("saved", "frag1");
             mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
         }
         initializeViewModel();
@@ -202,18 +200,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                         @Override
                         public void onResponse(Call<RestaurantSearch> call, Response<RestaurantSearch> response) {
                             swipeRefreshLayout.setRefreshing(false);
-                            restaurantArrayList = new ArrayList<>(response.body().getRestaurants());
-                            mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
+                            if(response.body()!=null) {
+                                restaurantArrayList = new ArrayList<>(response.body().getRestaurants());
+                                mainActivityFragment1.setRestaurantArrayList(restaurantArrayList);
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<RestaurantSearch> call, Throwable t) {
                             swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(MainActivity.this, "Unable to get restaurants", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, (MainActivity.this).getResources().getString(R.string.unableToGetRestaurantsToast), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
-            Toast.makeText(this, "Mobile network not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.mobileNetworkNotAvailableToast), Toast.LENGTH_SHORT).show();
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -240,10 +240,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onResume() {
         super.onResume();
-        cuisineIds = sharedPreferences.getString("cuisineIds", "none");
-        radius = sharedPreferences.getString("radius", "100");
-        sortBy = sharedPreferences.getString("sortBy", getResources().getStringArray(R.array.sortByInputValues)[0]);
-        sortOrder = sharedPreferences.getString("sortOrder", getResources().getStringArray(R.array.sortOrderInputValues)[0]);
+        cuisineIds = sharedPreferences.getString(getResources().getString(R.string.spCuisineIds), getResources().getString(R.string.none));
+        radius = sharedPreferences.getString(getResources().getString(R.string.spRadius), getResources().getString(R.string.spRadiusDefaultValue));
+        sortBy = sharedPreferences.getString(getResources().getString(R.string.spSortBy), getResources().getStringArray(R.array.sortByInputValues)[0]);
+        sortOrder = sharedPreferences.getString(getResources().getString(R.string.spSortOrder), getResources().getStringArray(R.array.sortOrderInputValues)[0]);
     }
 
     @Override
@@ -294,19 +294,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         restaurantsLiveData.observe(mainActivityFragment2, new Observer<List<Restaurant_>>() {
             @Override
             public void onChanged(@Nullable List<Restaurant_> bookmarkedRestaurants) {
-                bookmarkedRestaurantList = new ArrayList<>(bookmarkedRestaurants);
-                ArrayList<Restaurant> restaurantArrayList = new ArrayList<>();
-//                String[] restaurantNames = new String[bookmarkedRestaurants.size()];
-                String restaurantNames = "";
-                int i=0;
-                for(Restaurant_ restaurant_: bookmarkedRestaurants) {
-                    Restaurant restaurant = new Restaurant();
-                    restaurant.setRestaurant(restaurant_);
-                    restaurantArrayList.add(restaurant);
-                    restaurantNames += restaurant_.getName() + "\n";
+                if(bookmarkedRestaurants!=null) {
+                    bookmarkedRestaurantList = new ArrayList<>(bookmarkedRestaurants);
+                    ArrayList<Restaurant> restaurantArrayList = new ArrayList<>();
+                    // String[] restaurantNames = new String[bookmarkedRestaurants.size()];
+                    ArrayList<String> restaurantNamesList = new ArrayList<>();
+                    int i=0;
+                    for(Restaurant_ restaurant_: bookmarkedRestaurants) {
+                        Restaurant restaurant = new Restaurant();
+                        restaurant.setRestaurant(restaurant_);
+                        restaurantArrayList.add(restaurant);
+                        restaurantNamesList.add(restaurant_.getName());
+                    }
+                    mainActivityFragment2.setRestaurantArrayList(restaurantArrayList);
+                    FavoriteRestaurantsProvider.sendRefreshBroadcast(MainActivity.this);
                 }
-                mainActivityFragment2.setRestaurantArrayList(restaurantArrayList);
-                FavoriteRestaurantsWidgetService.startActionUpdateFavoriteRestaurants(getApplicationContext(), restaurantNames);
             }
         });
     }
@@ -314,14 +316,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if(latitude!=null)
-            outState.putDouble("latitude", latitude);
+            outState.putDouble(getResources().getString(R.string.latitudeIntent), latitude);
         if(longitude!=null)
-            outState.putDouble("longitude", longitude);
-        outState.putBoolean("useCurrentLocation", useCurrentLocation);
+            outState.putDouble(getResources().getString(R.string.longitudeIntent), longitude);
+        outState.putBoolean(getResources().getString(R.string.sisUseCurrentLocation), useCurrentLocation);
 //        outState.putParcelableArrayList("bookmarkedRestaurantList", bookmarkedRestaurantList);
-        outState.putParcelableArrayList("restaurantArrayList", restaurantArrayList);
-        getSupportFragmentManager().putFragment(outState, "fragment1", mainActivityFragment1);
-        getSupportFragmentManager().putFragment(outState, "fragment2", mainActivityFragment2);
+        outState.putParcelableArrayList(getResources().getString(R.string.parcelableRestaurantArrayList), restaurantArrayList);
+        getSupportFragmentManager().putFragment(outState, getResources().getString(R.string.fragment1Name), mainActivityFragment1);
+        getSupportFragmentManager().putFragment(outState, getResources().getString(R.string.fragment2Name), mainActivityFragment2);
         super.onSaveInstanceState(outState);
     }
 }

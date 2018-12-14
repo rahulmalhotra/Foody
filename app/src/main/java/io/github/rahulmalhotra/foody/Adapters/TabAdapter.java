@@ -1,5 +1,6 @@
 package io.github.rahulmalhotra.foody.Adapters;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,12 +9,17 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.rahulmalhotra.foody.R;
+
 public class TabAdapter extends FragmentStatePagerAdapter {
+
+    private Context context;
 
     private final List<Fragment> fragmentList = new ArrayList<>();
 
-    public TabAdapter(FragmentManager fm) {
+    public TabAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     public void addFragment(Fragment fragment) {
@@ -36,10 +42,10 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         String pageTitle = "";
         switch (position) {
             case 0:
-                pageTitle = "Nearby";
+                pageTitle = context.getResources().getString(R.string.nearbyTitle);
                 break;
             case 1:
-                pageTitle = "Favorites";
+                pageTitle = context.getResources().getString(R.string.favoritesTitle);
             break;
         }
         return pageTitle;

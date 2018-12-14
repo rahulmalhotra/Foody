@@ -1,5 +1,6 @@
 package io.github.rahulmalhotra.foody.Adapters;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,25 +60,25 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         }
         if(location!=null && !location.getLocality().isEmpty()) {
             if(!address.isEmpty()) {
-                address +=  ", ";
+                address += context.getResources().getString(R.string.comma);
             }
             address += location.getLocality();
         }
         if(location!=null && !location.getCity().isEmpty()) {
             if(!address.isEmpty()) {
-                address +=  ", ";
+                address += context.getResources().getString(R.string.comma);
             }
             address += location.getCity();
         }
         if(location!=null && !location.getZipcode().isEmpty()) {
             if(!address.isEmpty()) {
-                address +=  " - ";
+                address += context.getResources().getString(R.string.hyphen);
             }
             address += location.getZipcode();
         }
         if(restaurant.getUserRating()!=null) {
-            viewHolder.rating.setText("Rating: " + restaurant.getUserRating().getAggregateRating());
-            viewHolder.votes.setText(restaurant.getUserRating().getVotes() + " Votes");
+            viewHolder.rating.setText(context.getResources().getString(R.string.ratingLabel) + restaurant.getUserRating().getAggregateRating());
+            viewHolder.votes.setText(restaurant.getUserRating().getVotes() + context.getResources().getString(R.string.votesLabel));
             viewHolder.address.setText(address);
         } else if(restaurant.getIsBookmarked()) {
             viewHolder.rating.setText(restaurant.getRestaurantRating());
@@ -130,9 +131,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             isTablet = context.getResources().getBoolean(R.bool.isTablet);
 
             Restaurant_ restaurant = restaurantList.get(getAdapterPosition()).getRestaurant();
-            arguments.putParcelable("restaurant", restaurant);
-            arguments.putParcelable("userRating", restaurant.getUserRating());
-            arguments.putParcelable("location", restaurant.getLocation());
+            arguments.putParcelable(context.getResources().getString(R.string.parcelableRestaurant), restaurant);
+            arguments.putParcelable(context.getResources().getString(R.string.parcelableUserRating), restaurant.getUserRating());
+            arguments.putParcelable(context.getResources().getString(R.string.parcelableLocation), restaurant.getLocation());
 
             if(isTablet) {
                 RestaurantDetailFragment fragment = new RestaurantDetailFragment();
@@ -141,7 +142,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             } else {
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtras(arguments);
-                context.startActivity(intent);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle transitionBundle = ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context).toBundle();
+                    context.startActivity(intent, transitionBundle);
+                } else {
+                    context.startActivity(intent);
+                }
             }
         }
     }

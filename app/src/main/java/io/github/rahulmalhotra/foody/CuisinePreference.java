@@ -54,9 +54,9 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
         setContentView(R.layout.activity_cuisine_preference);
         ButterKnife.bind(this);
 
-        sharedPreferences = getSharedPreferences("foody", Context.MODE_PRIVATE);
-        latitude = getIntent().getStringExtra("latitude");
-        longitude = getIntent().getStringExtra("longitude");
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
+        latitude = getIntent().getStringExtra(getResources().getString(R.string.latitudeIntent));
+        longitude = getIntent().getStringExtra(getResources().getString(R.string.longitudeIntent));
         getCuisines();
         cuisineRefreshLayout.setRefreshing(true);
         applyCuisineFilter.setOnClickListener(this);
@@ -68,8 +68,9 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
 
         String[] cuisineNames = new String[cuisineList.size()];
 
-        String selectedCuisineIdString = sharedPreferences.getString("cuisineIds", "none");
-        String[] selectedCuisineIdArray = selectedCuisineIdString.split(",");
+        String selectedCuisineIdString="";
+        selectedCuisineIdString = sharedPreferences.getString(getResources().getString(R.string.spCuisineIds), getResources().getString(R.string.none));
+        String[] selectedCuisineIdArray = selectedCuisineIdString.split(getResources().getString(R.string.comma1));
         ArrayList<String> selectedCuisineIds = new ArrayList<>(Arrays.asList(selectedCuisineIdArray));
 
         for(int i=0; i<cuisineList.size(); i++) {
@@ -91,7 +92,7 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
 
     private void getCuisines() {
         if(latitude.isEmpty() || longitude.isEmpty()) {
-            Toast.makeText(this, "No preferences available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.noPreferencesAvailableToast), Toast.LENGTH_SHORT).show();
             return;
         }
         if(isNetworkAvailable()) {
@@ -109,11 +110,11 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
                         @Override
                         public void onFailure(Call<CuisineSearch> call, Throwable t) {
                             cuisineRefreshLayout.setRefreshing(false);
-                            Toast.makeText(CuisinePreference.this, "Unable to load cuisines", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CuisinePreference.this, (CuisinePreference.this).getResources().getString(R.string.unableToLoadCuisinesToast), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
-            Toast.makeText(this, "Mobile network not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.mobileNetworkNotAvailableToast), Toast.LENGTH_SHORT).show();
             cuisineRefreshLayout.setRefreshing(false);
         }
     }
@@ -153,10 +154,10 @@ public class CuisinePreference extends AppCompatActivity implements SwipeRefresh
             }
         }
 
-        editor.putString("cuisineIds", cuisineIds);
+        editor.putString(getResources().getString(R.string.spCuisineIds), cuisineIds);
         editor.apply();
 
-        Toast.makeText(this, "Cuisine Preference Applied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.cuisinePreferenceAppliedToast), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 }

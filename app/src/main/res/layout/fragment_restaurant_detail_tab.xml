@@ -19,34 +19,40 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="25sp"
+            android:hint="@string/restaurantNameHint"
             android:textAlignment="center" />
         <TextView
             android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:hint="@string/restaurantAddressHint"
             android:textColor="@android:color/black" />
         <TextView
             android:id="@+id/cuisines"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/cuisinesHint"
             android:textSize="20sp" />
         <TextView
             android:id="@+id/averageCost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/averageCostForTwoHint"
             android:textSize="20sp" />
         <TextView
             android:id="@+id/rating1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:hint="@string/ratingHint"
             android:textColor="@color/colorAccent" />
         <TextView
             android:id="@+id/votes1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:hint="@string/votesHint"
             android:textColor="@android:color/holo_blue_dark" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,8 +78,6 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             ads:adSize="BANNER"
             ads:adUnitId="@string/admobId" />
     </LinearLayout>

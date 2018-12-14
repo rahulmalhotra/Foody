@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/favoriteRestaurantsWidget"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout android:id="@+id/favoriteRestaurantsWidget"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:background="@android:color/holo_orange_dark"
     android:padding="10dp"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
     <TextView
         android:id="@+id/favoriteRestaurantsHeading"
-        android:text="Favorite Restaurants"
+        android:text="@string/favoriteRestaurantsWidgetLabel"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/favoriteRestaurants"
+    <ListView
+        android:id="@+id/favoriteRestaurantsList"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:layout_below="@+id/favoriteRestaurantsHeading"/>
+        android:layout_below="@+id/favoriteRestaurantsHeading"
+        tools:listitem="@layout/widget_list_row" />
 </RelativeLayout>

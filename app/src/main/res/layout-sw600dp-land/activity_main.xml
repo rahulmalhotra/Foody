@@ -13,6 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:weightSum="1">
         <FrameLayout
             android:layout_width="match_parent"
